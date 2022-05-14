@@ -219,7 +219,6 @@ public class ThermalSettingsFragment extends PreferenceFragment
         private ImageView icon;
         private View rootView;
         private ImageView stateIcon;
-        private ImageView touchIcon;
 
         private ViewHolder(View view) {
             super(view);
@@ -227,7 +226,6 @@ public class ThermalSettingsFragment extends PreferenceFragment
             this.mode = view.findViewById(R.id.app_mode);
             this.icon = view.findViewById(R.id.app_icon);
             this.stateIcon = view.findViewById(R.id.state);
-            this.touchIcon = view.findViewById(R.id.touch);
             this.rootView = view;
 
             view.setTag(this);
@@ -320,26 +318,16 @@ public class ThermalSettingsFragment extends PreferenceFragment
 
             holder.mode.setAdapter(new ModeAdapter(context));
             holder.mode.setOnItemSelectedListener(this);
-            holder.touchIcon.setOnClickListener(v -> {
-                Intent intent = new Intent(getActivity(), TouchSettingsActivity.class);
-                intent.putExtra("appName", entry.label);
-                intent.putExtra("packageName", entry.info.packageName);
-                startActivity(intent);
-            });
 
             holder.title.setText(entry.label);
             holder.title.setOnClickListener(v -> holder.mode.performClick());
+
             mApplicationsState.ensureIcon(entry);
             holder.icon.setImageDrawable(entry.icon);
+
             int packageState = mThermalUtils.getStateForPackage(entry.info.packageName);
             holder.mode.setSelection(packageState, false);
             holder.mode.setTag(entry);
-            if (packageState == ThermalUtils.STATE_BENCHMARK ||
-                packageState == ThermalUtils.STATE_GAMING) {
-                holder.touchIcon.setVisibility(View.VISIBLE);
-            } else {
-                holder.touchIcon.setVisibility(View.INVISIBLE);
-            }
             holder.stateIcon.setImageResource(getStateDrawable(packageState));
         }
 
